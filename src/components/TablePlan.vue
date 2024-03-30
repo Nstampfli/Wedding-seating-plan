@@ -53,7 +53,7 @@ export default {
 <style>
 .table-plan {
   display: grid;
-
+  position: relative;
   grid-template-columns: repeat(3, 1fr);
   /* Trois colonnes de largeur égale */
   grid-template-rows: repeat(3, 1fr);
@@ -65,6 +65,21 @@ export default {
   border-radius: 10px;
   padding: 50px 8px;
 
+}
+
+.table-plan::before {
+  content: "Entrée";
+  position: absolute;
+  top: -8px;
+  /* Positionner le pseudo-élément au-dessus de la grille */
+  left: 50%;
+  /* Centrer horizontalement */
+  transform: translateX(-50%);
+  /* Centrer horizontalement */
+  background-color: white;
+  /* Couleur de fond pour cacher la bordure */
+  padding: 0 10px;
+  /* Espacement autour du texte */
 }
 
 .table {

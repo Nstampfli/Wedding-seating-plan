@@ -53,6 +53,7 @@ export default {
   position: absolute;
   font-size: 2em;
   text-align: center;
+  padding: 0 16px;
 }
 
 #confetti-canvas {
