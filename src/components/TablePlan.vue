@@ -23,12 +23,18 @@ export default {
   computed: {
     formattedTables() {
       let tables = [];
-      for (let i = 0; i < this.guests.length; i += 6) { // Maintenant 6 invités par table
-        tables.push({
-          id: tables.length + 1,
-          seats: this.guests.slice(i, i + 6)
-        });
+      let numGuests = this.guests.length;
+      let numTables = Math.ceil(numGuests / 6); // Chaque table peut contenir jusqu'à 6 invités
+
+      for (let i = 0; i < numTables; i++) {
+        let startIdx = i * 6;
+        let endIdx = Math.min(startIdx + 6, numGuests);
+        let seats = this.guests.slice(startIdx, endIdx);
+        tables.push({ id: i + 1, seats });
       }
+
+      tables.splice(-1, 0, { id: 100000, seats: [] });
+
       return tables;
     }
   },
@@ -46,23 +52,42 @@ export default {
 
 <style>
 .table-plan {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+  /* Trois colonnes de largeur égale */
+  grid-template-rows: repeat(3, 1fr);
+  /* Trois lignes de hauteur égale */
   max-width: 1000px;
   margin: 40px auto;
-  gap: 20px;
+  gap: 40px 30px;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 50px 8px;
+
 }
 
 .table {
   border: 2px solid #666;
   border-radius: 50%;
   position: relative;
-  width: 250px;
-  height: 250px;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  /* La hauteur est égale à la largeur */
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.table:nth-last-child(2) {
+  border: none;
+}
+
+.table-number {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
 }
 
 .seat {
@@ -78,8 +103,10 @@ export default {
 }
 
 .highlighted {
-  background-color: red; /* Fond rouge pour le siège sélectionné */
-  color: white; /* Texte blanc pour une meilleure lisibilité */
+  background-color: red;
+  /* Fond rouge pour le siège sélectionné */
+  color: white;
+  /* Texte blanc pour une meilleure lisibilité */
 }
 
 /* Positionnement des sièges autour de la table */
