@@ -1,28 +1,56 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <welcome-screen v-if="showWelcomeScreen" @welcomeEnd="welcomeScreenEnd"></welcome-screen>
+    <div v-else>
+      <search-bar @select-guest="handleSelectGuest"></search-bar>
+      <p v-if="selectedGuest" class="guest-message">
+        Bonjour <strong>{{ selectedGuest.name }}</strong>, vous êtes assis à la place 
+        <strong>{{ selectedGuest.seatNumber }}</strong>, votre place est indiquée en <strong>rouge</strong> 
+        sur le plan ci-dessous.
+      </p>
+      <table-plan :highlightedSeat="highlightedSeat"></table-plan>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import WelcomeScreen from './components/WelcomeScreen.vue';
+import SearchBar from './components/SearchBar.vue';
+import TablePlan from './components/TablePlan.vue';
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
+    WelcomeScreen,
+    SearchBar,
+    TablePlan
+  },
+  data() {
+    return {
+      showWelcomeScreen: true, // Gère l'affichage de l'écran d'accueil
+      highlightedSeat: null,
+      selectedGuest: null
+    };
+  },
+  methods: {
+    welcomeScreenEnd() {
+      this.showWelcomeScreen = false; // Masque l'écran d'accueil
+    },
+    handleSelectGuest(guest) {
+      this.highlightedSeat = guest.seatNumber;
+      this.selectedGuest = guest;
+    }
   }
-}
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  /* Vos styles globaux, y compris pour body, etc. */
+  body {
+    font-family: sans-serif;
+  }
+
+  .guest-message {
+    text-align: center;
+    margin-top: 20px;
+  }
 </style>
